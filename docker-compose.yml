@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mcp-multivariate-statistics:
+    build: .
+    ports:
+      - "7766:7766"
+    environment:
+      - MCP_STATS_BASE_URL=${MCP_STATS_BASE_URL}
+      - MCP_STATS_SERVER_HOST=${MCP_STATS_SERVER_HOST}
+      - MCP_STATS_SERVER_PORT=${MCP_STATS_SERVER_PORT}
+      - MCP_STATS_SERVER_TRANSPORT=${MCP_STATS_SERVER_TRANSPORT}
+      - MCP_STATS_SERVER_PATH=${MCP_STATS_SERVER_PATH}
+    volumes:
+      - ./generated_files:/app/generated_files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${MCP_STATS_BASE_URL}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

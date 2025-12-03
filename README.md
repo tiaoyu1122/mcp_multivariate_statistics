@@ -1,0 +1,251 @@
+# 多元统计分析MCP服务插件
+
+多元统计分析MCP服务是一个基于 [MCP](https://modelscope.github.io/mcp/) 协议的统计分析工具集，提供丰富的多元统计分析和建模功能。该服务支持多种统计方法，涵盖回归分析、假设检验、判别分析、聚类分析、降维技术、时间序列分析等多个领域，能够满足科研、工程和商业分析的各种需求。
+
+## 功能特性
+
+- 支持多种统计分析方法
+- 支持中文显示
+- 生成的分析结果通过 URL 访问
+- 文件自动清理（默认2小时后自动删除）
+- 支持通过 FastMCP 框架运行
+- 支持 Docker 部署
+
+## 快速开始
+
+参考 [ECS_DEPLOYMENT.md](file:///Users/linyingzhi/Desktop/mcp_multivariate_statistics/ECS_DEPLOYMENT.md) 文件了解如何在阿里云 ECS 上部署本服务。
+
+### Docker 运行
+
+```bash
+# 创建目录用于存储生成的文件
+mkdir -p generated_files
+chmod 777 generated_files
+
+# 设置环境变量
+export MCP_STATS_ECS_DEPLOYMENT=true
+
+# 部署
+./deploy.sh
+```
+
+
+## 配置说明
+
+通过环境变量可以配置服务行为：
+
+- `MCP_STATS_OUTPUT_DIR`: 输出文件存储目录，默认为 `generated_files`
+- `MCP_STATS_BASE_URL`: 基础URL，用于生成文件访问链接，默认为 `http://localhost:7766`
+- `MCP_STATS_FILE_LIFETIME_HOURS`: 文件生命周期（小时），默认为 `2`
+- `MCP_STATS_CLEANUP_INTERVAL_MINUTES`: 清理任务执行间隔（分钟），默认为 `5`
+- `MCP_STATS_SERVER_HOST`: 服务器主机地址，默认为 `127.0.0.1`
+- `MCP_STATS_SERVER_PORT`: 服务器端口，默认为 `7766`
+- `MCP_STATS_SERVER_PATH`: 服务器路径，默认为 `/mcp`
+- `MCP_STATS_SERVER_TRANSPORT`: 传输方式，可选 `sse` 或 `http`，默认为 `sse`
+- `MCP_STATS_SERVER_LOG_LEVEL`: 日志级别，默认为 `info`
+
+## 工具列表及功能说明
+
+### 1. 回归分析工具
+1. `perform_multiple_regression` - 执行多元线性回归分析
+2. `perform_stepwise_regression` - 执行逐步回归分析
+3. `perform_regularized_regression` - 执行正则化回归分析（岭回归、套索回归、Elastic Net回归）
+4. `perform_generalized_linear_model` - 执行广义线性模型分析（逻辑回归、多项逻辑回归、有序逻辑回归、泊松回归、负二项回归）
+5. `perform_pls_regression` - 执行偏最小二乘回归分析
+6. `perform_robust_regression` - 执行稳健回归分析（RANSAC回归、Huber回归）
+7. `perform_quantile_regression` - 执行分位数回归分析
+8. `perform_nonparametric_regression` - 执行非参数回归分析（LOESS/LOWESS、样条回归）
+
+### 2. 假设检验工具
+9. `perform_hotelling_t2_test` - 执行霍特林T²检验
+10. `perform_multivariate_normality_test` - 执行多元正态性检验
+11. `perform_covariance_homogeneity_test` - 执行协方差矩阵齐性检验(Bartlett检验)
+12. `perform_manova` - 执行多元方差分析(MANOVA)
+13. `perform_box_m_test` - 执行Box's M检验
+14. `perform_categorical_independence_test` - 执行分类变量独立性检验
+15. `perform_continuous_independence_test` - 执行连续变量独立性检验
+
+### 3. 判别分析工具
+16. `perform_fisher_discriminant_analysis` - 执行Fisher判别分析
+17. `perform_distance_discriminant_analysis` - 执行距离判别分析
+18. `perform_bayes_discriminant_analysis` - 执行贝叶斯判别分析
+19. `perform_generalized_square_distance_discriminant_analysis` - 执行广义平方距离判别分析
+20. `perform_stepwise_discriminant_analysis` - 执行逐步判别分析
+
+### 4. 聚类分析工具
+21. `perform_kmeans_clustering` - 执行K-Means聚类分析
+22. `perform_kmedoids_clustering` - 执行K-Medoids聚类分析
+23. `perform_dbscan_clustering` - 执行DBSCAN聚类分析
+24. `perform_hierarchical_clustering` - 执行凝聚式层次聚类分析
+25. `perform_gmm_clustering` - 执行高斯混合模型(GMM)聚类分析
+26. `perform_hdbscan_clustering_tool` - 执行HDBSCAN聚类分析
+
+### 5. 降维分析工具
+27. `perform_pca` - 执行主成分分析(PCA)
+28. `perform_factor_analysis` - 执行因子分析
+29. `perform_correspondence_analysis` - 执行对应分析
+30. `perform_canonical_correlation_analysis` - 执行典型相关分析
+31. `perform_mds` - 执行多维尺度分析
+32. `perform_umap` - 执行UMAP非线性降维分析
+
+### 6. 时间序列分析工具
+33. `perform_time_series_analysis` - 执行时间序列分析
+34. `perform_time_series_preprocessing_tests` - 执行时间序列预处理检验
+35. `perform_time_series_cointegration_granger_tests` - 执行时间序列协整检验和Granger因果检验
+
+### 7. 数据预处理和诊断工具
+36. `perform_data_standardization` - 执行数据标准化（Z-score标准化或Min-Max标准化）
+37. `perform_multicollinearity_diagnosis` - 执行多重共线性诊断（方差膨胀因子VIF分析）
+38. `perform_multiple_imputation` - 执行缺失值多重插补分析
+
+### 8. 高级统计分析工具
+39. `perform_mixed_effects_model` - 执行混合效应模型分析（Mixed Effects Models / Hierarchical Models）
+40. `perform_survival_analysis` - 执行生存分析（Kaplan-Meier曲线、Log-rank检验、Cox比例风险模型）
+41. `perform_causal_inference` - 执行因果推断分析（逆概率加权、匹配、回归调整）
+42. `perform_sem_tool` - 执行结构方程模型分析
+
+## 工具详细说明
+
+### 回归分析工具详解
+
+#### 多元线性回归分析 (`perform_multiple_regression`)
+执行多元线性回归分析，包含统计显著性检验和残差分析。该工具可以帮助用户建立因变量与多个自变量之间的线性关系模型，并提供模型拟合优度、参数显著性等统计信息。
+
+#### 逐步回归分析 (`perform_stepwise_regression`)
+执行逐步回归分析，通过向前选择、向后剔除或双向逐步方法自动选择最优变量组合构建回归模型。该方法有助于解决多重共线性问题并提高模型的预测能力。
+
+#### 正则化回归分析 (`perform_regularized_regression`)
+提供岭回归、套索回归和Elastic Net回归三种正则化方法，用于处理多重共线性问题、变量选择和模型泛化能力提升，广泛应用于高维数据回归分析。
+
+#### 广义线性模型分析 (`perform_generalized_linear_model`)
+提供多种回归分析方法，包括逻辑回归（二分类）、多项逻辑回归（多分类）、有序逻辑回归（有序分类）、泊松回归（计数型数据）和负二项回归（过度离散的计数型数据）。
+
+#### 偏最小二乘回归分析 (`perform_pls_regression`)
+在存在多重共线性或高维数据情况下常用的回归分析方法，通过提取成分来建立自变量和因变量之间的关系模型，广泛应用于化学计量学、生物信息学等领域。
+
+#### 稳健回归分析 (`perform_robust_regression`)
+执行RANSAC回归和Huber回归等稳健回归分析方法，这些方法对异常值具有较强的鲁棒性，能够在存在离群点的情况下提供可靠的参数估计。
+
+#### 分位数回归分析 (`perform_quantile_regression`)
+执行分位数回归分析，用于估计条件分位数函数，相比传统的最小二乘回归，能够提供更全面的变量关系信息，尤其适用于非正态分布或异方差数据。
+
+#### 非参数回归分析 (`perform_nonparametric_regression`)
+提供局部加权回归（LOESS/LOWESS）和样条回归两种非参数回归方法，适用于探索性数据分析和复杂非线性关系建模，无需对数据分布做严格假设。
+
+### 假设检验工具详解
+
+#### 霍特林T²检验 (`perform_hotelling_t2_test`)
+执行Hotelling's T²检验，用于检验两个多维正态分布总体的均值向量是否相等，是单样本t检验的多变量扩展。
+
+#### 多元正态性检验 (`perform_multivariate_normality_test`)
+执行多元正态性检验，检验多变量数据是否符合多元正态分布，这是许多多元统计分析方法的重要前提条件。
+
+#### 协方差矩阵齐性检验 (`perform_covariance_homogeneity_test`)
+执行Bartlett协方差矩阵齐性检验，用于检验多个多元正态分布总体的协方差矩阵是否相等，这是判别分析、MANOVA等方法的重要前提条件。
+
+#### 多元方差分析 (`perform_manova`)
+执行多元方差分析(MANOVA)，用于检验多个组在多个因变量上的均值向量是否存在显著差异，是单因素方差分析的多变量扩展。
+
+#### Box's M检验 (`perform_box_m_test`)
+执行Box's M检验，这是另一种协方差矩阵齐性检验方法，在SPSS等统计软件中较为常用，用于检验多个组的协方差矩阵是否相等。
+
+#### 分类变量独立性检验 (`perform_categorical_independence_test`)
+执行卡方独立性检验，用于检验两个分类变量是否相互独立，通过卡方检验来判断变量间的关联性。
+
+#### 连续变量独立性检验 (`perform_continuous_independence_test`)
+执行连续变量相关性检验，用于检验多个连续变量之间的线性相关性，通过皮尔逊相关系数来判断变量间的相关性。
+
+### 判别分析工具详解
+
+#### Fisher判别分析 (`perform_fisher_discriminant_analysis`)
+使用Fisher判别法（线性判别分析LDA）来寻找最能区分不同组的线性组合，是分类和降维的重要方法。
+
+#### 距离判别分析 (`perform_distance_discriminant_analysis`)
+基于马氏距离进行分类判别，适用于各组协方差矩阵相等的情况。
+
+#### 贝叶斯判别分析 (`perform_bayes_discriminant_analysis`)
+基于贝叶斯定理和多元正态分布假设进行分类判别，能够处理先验概率不等的情况。
+
+#### 广义平方距离判别分析 (`perform_generalized_square_distance_discriminant_analysis`)
+考虑各组协方差矩阵不等的情况进行分类判别，是一种更通用的判别方法。
+
+#### 逐步判别分析 (`perform_stepwise_discriminant_analysis`)
+通过逐步选择变量构建最优判别函数，能够自动选择最具判别能力的变量组合。
+
+### 聚类分析工具详解
+
+#### K-Means聚类分析 (`perform_kmeans_clustering`)
+一种基于距离的无监督学习方法，通过迭代优化将数据划分为K个簇。
+
+#### K-Medoids聚类分析 (`perform_kmedoids_clustering`)
+K-Means的改进版，使用实际数据点作为聚类中心，对噪声和异常值更加鲁棒。
+
+#### DBSCAN聚类分析 (`perform_dbscan_clustering`)
+一种基于密度的聚类方法，能够发现任意形状的簇并识别噪声点。
+
+#### 凝聚式层次聚类分析 (`perform_hierarchical_clustering`)
+通过不断合并最相似的簇来构建聚类层次结构。
+
+#### 高斯混合模型(GMM)聚类分析 (`perform_gmm_clustering`)
+假设数据由多个高斯分布混合生成，通过期望最大化(EM)算法进行参数估计。
+
+#### HDBSCAN聚类分析 (`perform_hdbscan_clustering_tool`)
+一种改进的基于密度的聚类方法，能够自动确定聚类数量并处理不同密度的簇。
+
+### 降维分析工具详解
+
+#### 主成分分析(PCA) (`perform_pca`)
+一种常用的降维技术，通过线性变换将原始高维数据转换为低维空间，同时保留尽可能多的信息。
+
+#### 因子分析 (`perform_factor_analysis`)
+一种用于探索数据潜在结构的统计方法，旨在找出影响观察变量的潜在因子，常用于心理学、市场调研等领域。
+
+#### 对应分析 (`perform_correspondence_analysis`)
+一种专门用于分析两个分类变量之间关系的多元统计方法，通过降维技术将行和列映射到低维空间中，广泛应用于市场研究、社会科学等领域。
+
+#### 典型相关分析 (`perform_canonical_correlation_analysis`)
+一种研究两组变量之间相关关系的多元统计方法，通过寻找每组变量的线性组合来最大化它们之间的相关性，广泛应用于生态学、心理学、经济学等领域。
+
+#### 多维尺度分析 (`perform_mds`)
+通过保持对象间距离关系的方式将高维数据映射到低维空间，用于可视化和分析对象间的相似性结构。
+
+#### UMAP非线性降维分析 (`perform_umap`)
+一种先进的非线性降维方法，能够保持数据的局部和全局结构，在可视化和聚类分析中有广泛应用。
+
+### 时间序列分析工具详解
+
+#### 时间序列分析 (`perform_time_series_analysis`)
+用于分析和预测时间相关数据的统计方法，支持ARIMA、季节性ARIMA、指数平滑等多种模型，广泛应用于金融、经济、气象等领域。
+
+#### 时间序列预处理检验 (`perform_time_series_preprocessing_tests`)
+用于在建模前对时间序列数据进行各种统计检验，包括平稳性检验(ADF、KPSS)、正态性检验、自相关检验等，帮助判断数据是否适合建模以及选择合适的模型类型。
+
+#### 时间序列协整检验和Granger因果检验 (`perform_time_series_cointegration_granger_tests`)
+执行时间序列协整检验和Granger因果检验，用于分析多个时间序列之间的长期均衡关系和因果关系。
+
+### 数据预处理和诊断工具详解
+
+#### 数据标准化 (`perform_data_standardization`)
+执行Z-score标准化或Min-Max标准化，将数据转换到统一的尺度，消除量纲影响。
+
+#### 多重共线性诊断 (`perform_multicollinearity_diagnosis`)
+通过方差膨胀因子(VIF)分析诊断多重共线性问题，为回归分析提供重要参考。
+
+#### 缺失值多重插补分析 (`perform_multiple_imputation`)
+提供多种缺失值插补方法，包括MICE、均值插补、中位数插补、众数插补和K近邻插补等。
+
+### 高级统计分析工具详解
+
+#### 混合效应模型分析 (`perform_mixed_effects_model`)
+执行混合效应模型分析（Mixed Effects Models / Hierarchical Models），适用于具有层次结构的数据分析。
+
+#### 生存分析 (`perform_survival_analysis`)
+整合了生存分析的核心方法，包括Kaplan-Meier生存曲线估计、Log-rank检验和Cox比例风险模型，广泛应用于医学研究、工程可靠性分析等领域。
+
+#### 因果推断分析 (`perform_causal_inference`)
+提供三种常用的因果效应估计方法：逆概率加权（IPW）、匹配（Matching）和回归调整（Regression Adjustment），用于从观察数据中估计因果效应。
+
+#### 结构方程模型分析 (`perform_sem_tool`)
+执行结构方程模型分析，用于分析变量间的复杂关系结构，特别适用于验证理论模型。
+
+每个工具都会返回生成的分析结果或文件路径或URL，方便用户进一步查看和使用分析结果。
